@@ -87,7 +87,28 @@ open class FSPagerViewCell: UICollectionViewCell {
             return super.isSelected
         }
     }
-    
+
+    /// properties to control shadow appearance
+    @objc
+    open var shadowColor: UIColor = .black {
+        didSet { updateShadow() }
+    }
+
+    @objc
+    open var shadowRadius: CGFloat = 5 {
+        didSet { updateShadow() }
+    }
+
+    @objc
+    open var shadowOpacity: Float = 0.75 {
+        didSet { updateShadow() }
+    }
+
+    @objc
+    open var shadowOffset: CGSize = .zero {
+        didSet { updateShadow() }
+    }
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -101,12 +122,17 @@ open class FSPagerViewCell: UICollectionViewCell {
     fileprivate func commonInit() {
         self.contentView.backgroundColor = UIColor.clear
         self.backgroundColor = UIColor.clear
-        self.contentView.layer.shadowColor = UIColor.black.cgColor
-        self.contentView.layer.shadowRadius = 5
-        self.contentView.layer.shadowOpacity = 0.75
-        self.contentView.layer.shadowOffset = .zero
+        // Apply the shadow settings
+        updateShadow()
     }
-    
+
+    private func updateShadow() {
+        self.contentView.layer.shadowColor = shadowColor.cgColor
+        self.contentView.layer.shadowRadius = shadowRadius
+        self.contentView.layer.shadowOpacity = shadowOpacity
+        self.contentView.layer.shadowOffset = shadowOffset
+    }
+
     deinit {
         if let textLabel = _textLabel {
             textLabel.removeObserver(self, forKeyPath: "font", context: kvoContext)
